@@ -1,0 +1,39 @@
+# This YAML file describes your package. Stack will automatically generate a
+# Cabal file when you run `stack build`. See the hpack website for help with
+# this file: <https://github.com/sol/hpack>.
+category: RSS
+description: feed-extract extracts the data from FeedReader's database and exports it to OPML
+  See README.md for more details 
+executables:
+  feed-extract:
+    dependencies:
+    - base
+    - feed-extract
+    ghc-options:
+    - -rtsopts
+    - -threaded
+    - -with-rtsopts=-N
+    main: Main.hs
+    source-dirs: src
+extra-source-files:
+- LICENSE.md
+- package.yaml
+- README.md
+- stack.yaml
+ghc-options: -Wall
+github: tchoutri/feed-extract
+library:
+  dependencies:
+  - base
+  - opml
+  - persistent-sqlite
+  - sqlite-simple
+  - optparse-applicative
+  - xml
+  - text
+  source-dirs: lib
+license: MIT
+maintainer: Théophile Choutri
+name: feed-extract
+synopsis: feed-extract extracts the data from FeedReader's database and exports it to OPML
+version: '0.0.1'
