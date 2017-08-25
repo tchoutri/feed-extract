@@ -1,4 +1,5 @@
 import           Builder
+import           System.Directory   (doesFileExist)
 import           System.Environment
 
 main :: IO ()
@@ -9,6 +10,13 @@ main = do
             putStrLn "[!] You must specify the database's file."
             putStrLn "[!] It is usually located at ~/.local/share/feedreader/data/"
         (path:_) -> do
-            feeds <- getFeeds path
-            export feeds
-            putStrLn "[+] Feeds sucessfully exported to ~/feedreader-export.opml"
+            doesIt <- doesFileExist path
+            print doesIt
+            if doesIt then
+                do
+                feeds <- getFeeds path
+                export feeds
+                putStrLn "[+] Feeds sucessfully exported to ~/feedreader-export.opml"
+            else
+                do
+                putStrLn "[!] Nah, you really need to give a *real* path :/"
