@@ -9,6 +9,7 @@ executables:
     dependencies:
     - base
     - feed-extract
+    - directory
     ghc-options:
     - -rtsopts
     - -threaded
