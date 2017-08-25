@@ -12,6 +12,11 @@ run `stack install` in the project directory. The binary will be copied to `~/.l
 
 `feed-extract ~/.local/share/feedreader/data/feedreader-04.db` or every other location where your db might be.
 
+## ROADMAP
+
+- [ ] Preserve categories
+
 ## LICENSE
 
 This software is licenced under the [MIT](LICENSE.md) license
+
