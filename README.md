@@ -4,9 +4,17 @@ This is my Haskell week-end project to help with [the lack of "Export" feature](
 
 ## Install
 
+### Manual install (recommended for bleeding-edge patches)
+
 You'll need [Stack](https://haskellstack.org).
 
-run `stack install` in the project directory. The binary will be copied to `~/.local/bin`.
+run `stack install` in the project directory. The binary will be copied to `~/.local/bin`.  
+You might want to run `stack install --ghc-options=-dynamic` in order to reduce the size of the binary (4,1M → 20Ko).
+
+### Releases
+
+For the moment, releases are hosted on the GitHub platform. They consist of a Zip archive with the README, the LICENSE file and the binary, whose Haskell
+libraries are bundled in (but the C libraries are still dynamically linked (for now)).
 
 ## Usage
 
