@@ -11,7 +11,6 @@ main = do
             putStrLn "[!] It is usually located at ~/.local/share/feedreader/data/"
         (path:_) -> do
             doesIt <- doesFileExist path
-            print doesIt
             if doesIt then
                 do
                 feeds <- getFeeds path
