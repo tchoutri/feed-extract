@@ -2,12 +2,15 @@
 
 module Builder where
 
+import           Data.MultiMap          (MultiMap)
+import qualified Data.MultiMap          as MultiMap
 import           Database.SQLite.Simple
 import           System.Environment     (getEnv)
 import           Text.OPML.Export
 import           Text.OPML.Syntax
 import           Text.OPML.Writer
 import           Types
+
 
 
 getFeeds :: FilePath -> IO [Feed]
@@ -23,24 +26,38 @@ export feeds = do
 
 buildOPML :: [Feed] -> OPML
 buildOPML feeds =
-    OPML "2.0" [xmlAttr "encoding" "UTF-8"] buildHead (buildBody feeds) []
+    OPML "2.0" [] buildHead (buildBody' feeds) []
 
 buildHead :: OPMLHead
 buildHead = OPMLHead "Feedreader RSS Export" [attrs] Nothing Nothing Nothing Nothing Nothing Nothing Nothing Nothing Nothing Nothing []
     where
     attrs = xmlAttr "title" "Feedreader"
 
+buildBody' :: [Feed] -> [Outline]
+buildBody' feeds =
+    let
+        datas =  concatMap  (\feed -> [(category feed, feed)]) feeds
+        mmap  = MultiMap.assocs $ MultiMap.fromList datas
+    in
+        fmap (\(key, values) -> buildElement' key values) mmap
+
+buildElement' :: Category -> [Feed] -> Outline
+buildElement' cat feeds =
+    let
+        children = buildBody feeds
+    in
+        Outline cat Nothing Nothing Nothing Nothing [] children []
+
 
 buildBody :: [Feed] -> [Outline]
 buildBody feeds = map buildElement feeds
 
-
 buildElement :: Feed -> Outline
 buildElement feed =
     let
-        txt   = name feed
-        type' = Just "rss"
+        txt      = name feed
+        type'    = Just "rss"
         html_url = xmlAttr "htmlUrl" (htmlURL feed)
-        xml_url =  xmlAttr "xmlUrl" (xmlURL feed)
+        xml_url  =  xmlAttr "xmlUrl" (xmlURL feed)
     in
         Outline txt type' Nothing Nothing Nothing [html_url, xml_url] [] []

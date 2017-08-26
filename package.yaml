@@ -27,11 +27,9 @@ library:
   dependencies:
   - base
   - opml
-  - persistent-sqlite
   - sqlite-simple
-  - optparse-applicative
-  - xml
-  - text
+  - multimap
+  - containers
   source-dirs: lib
 license: MIT
 maintainer: Théophile Choutri
