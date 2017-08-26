@@ -23,7 +23,7 @@ libraries are bundled in (but the C libraries are still dynamically linked (for 
 ## ROADMAP
 
 - [x] Preserve categories
-  - [ ] Preserve the MultiMap
+  - [ ] Get rid of the multimap
 
 ## LICENSE
 
