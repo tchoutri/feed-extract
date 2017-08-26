@@ -26,15 +26,15 @@ export feeds = do
 
 buildOPML :: [Feed] -> OPML
 buildOPML feeds =
-    OPML "2.0" [] buildHead (buildBody' feeds) []
+    OPML "2.0" [] buildHead (buildBody feeds) []
 
 buildHead :: OPMLHead
 buildHead = OPMLHead "Feedreader RSS Export" [attrs] Nothing Nothing Nothing Nothing Nothing Nothing Nothing Nothing Nothing Nothing []
     where
     attrs = xmlAttr "title" "Feedreader"
 
-buildBody' :: [Feed] -> [Outline]
-buildBody' feeds =
+buildBody :: [Feed] -> [Outline]
+buildBody feeds =
     let
         datas =  concatMap  (\feed -> [(category feed, feed)]) feeds
         mmap  = MultiMap.assocs $ MultiMap.fromList datas
@@ -49,8 +49,10 @@ buildElement' cat feeds =
         Outline cat Nothing Nothing Nothing Nothing [] children []
 
 
-buildBody :: [Feed] -> [Outline]
-buildBody feeds = map buildElement feeds
+-- Legacy function that doesn't handle categories but left here
+-- for people to use it in their own project.
+-- buildBody' :: [Feed] -> [Outline]
+-- buildBody' feeds = map buildElement feeds
 
 buildElement :: Feed -> Outline
 buildElement feed =
