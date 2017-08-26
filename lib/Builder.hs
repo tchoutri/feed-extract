@@ -2,7 +2,6 @@
 
 module Builder where
 
-import           Data.MultiMap          (MultiMap)
 import qualified Data.MultiMap          as MultiMap
 import           Database.SQLite.Simple
 import           System.Environment     (getEnv)
