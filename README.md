@@ -14,7 +14,8 @@ You might want to run `stack install --ghc-options=-dynamic` in order to reduce 
 ### Releases
 
 For the moment, releases are hosted on the GitHub platform. They consist of a Zip archive with the README, the LICENSE file and the binary, whose Haskell
-libraries are bundled in (but the C libraries are still dynamically linked (for now)).
+libraries are bundled in (but the C libraries are still dynamically linked (for now)).  
+The releases might not be as up-to-date as the `master` branch, though.
 
 ## Usage
 

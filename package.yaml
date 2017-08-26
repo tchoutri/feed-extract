@@ -35,4 +35,4 @@ license: MIT
 maintainer: Théophile Choutri
 name: feed-extract
 synopsis: feed-extract extracts the data from FeedReader's database and exports it to OPML
-version: '0.0.1'
+version: '0.0.2'
