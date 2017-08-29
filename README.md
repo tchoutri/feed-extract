@@ -21,6 +21,11 @@ The releases might not be as up-to-date as the `master` branch, though.
 
 `feed-extract ~/.local/share/feedreader/data/feedreader-04.db` or every other location where your db might be.
 
+## Uninstall
+
+As Stack does not keep trace of the installed objects on the filesystem, it does not provide an `uninstall` sub-command.  
+But since `feed-extract` only uses itself, you can safely delete the binary from your filesystem.
+
 ## ROADMAP
 
 - [x] Preserve categories
