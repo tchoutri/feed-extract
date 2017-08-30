@@ -13,31 +13,35 @@ main = do
         ("--version":_) -> version
         (path:_) -> do
             doesIt <- doesFileExist path
-            if doesIt then
+            if doesIt then do
                 processArgs args
-                putStrLn "[+] Feeds sucessfully exported to ~/feedreader-export.opml"
             else
                 putStrLn "[!] Nah, you really need to give a *real* path :/"
 
-help :: IO String
+help :: IO ()
 help = putStrLn "Usage: feed-extract PATH_TO_DATABASE"
 
-version :: IO String
+version :: IO ()
 version = putStrLn "Feed-extract v0.0.2"
 
-getStdInstead :: IO String
+getStdInstead :: IO ()
 getStdInstead = do
     args <- getLine
     case args of
-        [] ->
+        [] -> do
             putStrLn "[!] You must specify the database's file."
             putStrLn "[!] It is usually located at ~/.local/share/feedreader/data/"
         args ->
-            processArgs args
+            processArgs' args
 
 
 processArgs :: [String] -> IO ()
-processArgs (path:args) = do
+processArgs (path:_) = do
     feeds <- getFeeds path
     export feeds
     putStrLn "[+] Feeds sucessfully exported to ~/feedreader-export.opml"
+
+processArgs' :: String -> IO ()
+processArgs' path =
+    processArgs [path]
+
