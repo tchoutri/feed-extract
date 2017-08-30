@@ -24,12 +24,13 @@ export feeds = do
     let opml_str = serializeOPML $ buildOPML feeds
     let savePath = home ++ "/feedreader-export.opml"
 
-    result <- try (writeFile savePath opml_str)
-    case result of
-        Right _  -> putStrLn "[+] Feeds sucessfully exported to ~/feedreader-export.opml"
-        Left (ex :: SomeException) -> do
-            putStrLn "[!] Hmm, something not good at all happened when the file was being written."
-            putStrLn "[!] Make sure your hard drive isn't full and your HOME directory has the correct permissions…"
+    writeFile savePath opml_str
+    -- result <- try (writeFile savePath opml_str)
+    -- case result of
+    --     Right _  -> putStrLn "[+] Feeds sucessfully exported to ~/feedreader-export.opml"
+    --     Left (ex :: SomeException) -> do
+    --         putStrLn "[!] Hmm, something not good at all happened when the file was being written."
+    --         putStrLn "[!] Make sure your hard drive isn't full and your HOME directory has the correct permissions…"
 
 
 buildOPML :: [Feed] -> OPML
