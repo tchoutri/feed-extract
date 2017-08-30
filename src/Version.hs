@@ -22,4 +22,4 @@ help = [i|Usage: [OPTION] [DATABASE PATH]
         • -h|--help:    Print this help message
         • -v|--version: Display the version number
 
-    Any issue? Open one at https://github.com/tchoutri/feed-extract/issues/new|]
+Any issue? Open one at https://github.com/tchoutri/feed-extract/issues/new|]
