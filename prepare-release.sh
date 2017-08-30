@@ -10,6 +10,6 @@ else
   stack build || exit 1
   FEEDEXTRACT_PATH=$(stack path --local-install-root)
   cp LICENSE.md README.md ${FEEDEXTRACT_PATH}/bin/feed-extract feed-extract-"${1}"/
-  zip -rv feed-extract-"${1}".zip feed-extract-"${1}"
+  zip -rv feed-extract-$(uname -s)-"${1}".zip feed-extract-"${1}"
   rm -rf feed-extract-"${1}"
 fi
