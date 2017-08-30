@@ -10,6 +10,7 @@ executables:
     - base
     - feed-extract
     - directory
+    - here
     ghc-options:
     - -rtsopts
     - -threaded
