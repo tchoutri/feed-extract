@@ -2,6 +2,7 @@
 
 module Builder where
 
+import           Control.Exception      (onException)
 import qualified Data.MultiMap          as MultiMap
 import           Database.SQLite.Simple
 import           System.Environment     (getEnv)
@@ -21,7 +22,7 @@ export :: [Feed] -> IO ()
 export feeds = do
     home <- getEnv "HOME"
     let opml_str = serializeOPML $ buildOPML feeds
-    writeFile (home ++ "/feedreader-export.opml") opml_str
+    onException (writeFile (home ++ "/feedreader-export.opml") opml_str) (putStrLn "[!] Hmm, something not good at all happened when the file was being written. Make sure your hard drive isn't full and your HOME directory has the correct permissions…")
 
 buildOPML :: [Feed] -> OPML
 buildOPML feeds =
