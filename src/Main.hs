@@ -1,7 +1,7 @@
 import           Builder
 import           System.Directory   (doesFileExist)
 import           System.Environment
-import qualified Version            as Version
+import           System.Exit        (die)
 
 main :: IO ()
 main = do
@@ -18,7 +18,7 @@ main = do
             if doesIt then do
                 processArgs args
             else
-                putStrLn "[!] Nah, you really need to give a *real* path :/"
+                putStrLn "[!] No database was found at the given path. :/"
 
 
 getStdInstead :: IO ()
@@ -28,17 +28,15 @@ getStdInstead = do
         [] -> do
             putStrLn "[!] You must specify the database's file."
             putStrLn "[!] It is usually located at ~/.local/share/feedreader/data/"
-        args ->
-            processArgs' args
-
+        args' ->
+            processArgs' args'
 
 processArgs :: [String] -> IO ()
+processArgs [] = die "wat."
 processArgs (path:_) = do
     feeds <- getFeeds path
     export feeds
-    putStrLn "[+] Feeds sucessfully exported to ~/feedreader-export.opml"
 
 processArgs' :: String -> IO ()
 processArgs' path =
     processArgs [path]
-

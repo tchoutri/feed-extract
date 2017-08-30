@@ -30,7 +30,6 @@ library:
   - opml
   - sqlite-simple
   - multimap
-  - containers
   source-dirs: lib
 license: MIT
 maintainer: Théophile Choutri

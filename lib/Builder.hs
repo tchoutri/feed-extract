@@ -24,23 +24,28 @@ export feeds = do
     let opml_str = serializeOPML $ buildOPML feeds
     let savePath = home ++ "/feedreader-export.opml"
 
-    writeFile savePath opml_str
-    -- result <- try (writeFile savePath opml_str)
-    -- case result of
-    --     Right _  -> putStrLn "[+] Feeds sucessfully exported to ~/feedreader-export.opml"
-    --     Left (ex :: SomeException) -> do
-    --         putStrLn "[!] Hmm, something not good at all happened when the file was being written."
-    --         putStrLn "[!] Make sure your hard drive isn't full and your HOME directory has the correct permissions…"
-
+    result <- try (writeFile savePath opml_str)
+    case result of
+        Right _  -> putStrLn "[+] Feeds sucessfully exported to ~/feedreader-export.opml"
+        Left (ex :: SomeException) -> do
+            putStrLn "[!] Hmm, something not good at all happened when the file was being written."
 
 buildOPML :: [Feed] -> OPML
 buildOPML feeds =
-    OPML "2.0" [] buildHead (buildBody feeds) []
+    OPML "2.0" [] buildHead (buildBody' feeds) []
 
 buildHead :: OPMLHead
 buildHead = OPMLHead "Feedreader RSS Export" [attrs] Nothing Nothing Nothing Nothing Nothing Nothing Nothing Nothing Nothing Nothing []
     where
     attrs = xmlAttr "title" "Feedreader"
+
+buildBody' :: [Feed] -> [Outline]
+buildBody' feeds =
+    let
+        datas =  concatMap  (\feed -> [(category feed, feed)]) feeds
+        mmap  = MultiMap.assocs $ MultiMap.fromList datas
+    in
+        fmap (\(key, values) -> buildElement' key values) mmap
 
 buildBody :: [Feed] -> [Outline]
 buildBody feeds =
@@ -62,6 +67,14 @@ buildElement' cat feeds =
 -- for people to use it in their own project.
 -- buildBody' :: [Feed] -> [Outline]
 -- buildBody' feeds = map buildElement feeds
+
+buildElement' :: Category -> [Feed] -> Outline
+buildElement' cat feeds =
+    let
+        children = buildBody feeds
+    in
+        Outline cat Nothing Nothing Nothing Nothing [] children []
+
 
 buildElement :: Feed -> Outline
 buildElement feed =
