@@ -7,6 +7,7 @@ import           Control.Exception      (SomeException, try)
 import qualified Data.MultiMap          as MultiMap
 import           Database.SQLite.Simple
 import           System.Environment     (getEnv)
+-- import           System.Exit            (die)
 import           Text.OPML.Export
 import           Text.OPML.Syntax
 import           Text.OPML.Writer
@@ -24,9 +25,12 @@ export feeds = do
     let opml_str = serializeOPML $ buildOPML feeds
     let savePath = home ++ "/feedreader-export.opml"
 
+    -- print opml_str
+
+    -- die "ugh"
     result <- try (writeFile savePath opml_str)
     case result of
-        Right _  -> putStrLn "[+] Feeds sucessfully exported to ~/feedreader-export.opml"
+        Right _  -> putStrLn $ "[+] Feeds sucessfully exported to " ++ savePath
         Left (ex :: SomeException) -> do
             putStrLn "[!] Hmm, something not good at all happened when the file was being written."
 
@@ -40,20 +44,14 @@ buildHead = OPMLHead "Feedreader RSS Export" [attrs] Nothing Nothing Nothing Not
     attrs = xmlAttr "title" "Feedreader"
 
 buildBody' :: [Feed] -> [Outline]
-buildBody' feeds =
-    let
-        datas =  concatMap  (\feed -> [(category feed, feed)]) feeds
-        mmap  = MultiMap.assocs $ MultiMap.fromList datas
-    in
-        fmap (\(key, values) -> buildElement' key values) mmap
+buildBody' feeds = do
+    let datas =  concatMap  (\feed -> [(category feed, feed)]) feeds
+    let mmap  = MultiMap.assocs $ MultiMap.fromList datas
+
+    fmap (\(key, values) -> buildElement' key values) mmap
 
 buildBody :: [Feed] -> [Outline]
-buildBody feeds =
-    let
-        datas =  concatMap  (\feed -> [(category feed, feed)]) feeds
-        mmap  = MultiMap.assocs $ MultiMap.fromList datas
-    in
-        fmap (\(key, values) -> buildElement' key values) mmap
+buildBody feeds = map buildElement feeds
 
 buildElement' :: Category -> [Feed] -> Outline
 buildElement' cat feeds =
@@ -61,20 +59,6 @@ buildElement' cat feeds =
         children = buildBody feeds
     in
         Outline cat Nothing Nothing Nothing Nothing [] children []
-
-
--- Legacy function that doesn't handle categories but left here
--- for people to use it in their own project.
--- buildBody' :: [Feed] -> [Outline]
--- buildBody' feeds = map buildElement feeds
-
-buildElement' :: Category -> [Feed] -> Outline
-buildElement' cat feeds =
-    let
-        children = buildBody feeds
-    in
-        Outline cat Nothing Nothing Nothing Nothing [] children []
-
 
 buildElement :: Feed -> Outline
 buildElement feed =

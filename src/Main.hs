@@ -2,6 +2,7 @@ import           Builder
 import           System.Directory   (doesFileExist)
 import           System.Environment
 import           System.Exit        (die)
+import qualified Version            as Version
 
 main :: IO ()
 main = do
