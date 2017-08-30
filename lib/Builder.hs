@@ -1,7 +1,10 @@
-{-# LANGUAGE OverloadedStrings #-}
+{-# LANGUAGE OverloadedStrings   #-}
+{-# LANGUAGE ScopedTypeVariables #-}
 
 module Builder where
 
+import           Control.Exception      (SomeException, try)
+import qualified Data.MultiMap          as MultiMap
 import           Database.SQLite.Simple
 import           System.Environment     (getEnv)
 import           Text.OPML.Export
@@ -19,11 +22,17 @@ export :: [Feed] -> IO ()
 export feeds = do
     home <- getEnv "HOME"
     let opml_str = serializeOPML $ buildOPML feeds
-    writeFile (home ++ "/feedreader-export.opml") opml_str
+    let savePath = home ++ "/feedreader-export.opml"
+
+    result <- try (writeFile savePath opml_str)
+    case result of
+        Right _  -> putStrLn "[+] Feeds sucessfully exported to ~/feedreader-export.opml"
+        Left (ex :: SomeException) -> do
+            putStrLn "[!] Hmm, something not good at all happened when the file was being written."
 
 buildOPML :: [Feed] -> OPML
 buildOPML feeds =
-    OPML "2.0" [xmlAttr "encoding" "UTF-8"] buildHead (buildBody feeds) []
+    OPML "2.0" [] buildHead (buildBody' feeds) []
 
 buildHead :: OPMLHead
 buildHead = OPMLHead "Feedreader RSS Export" [attrs] Nothing Nothing Nothing Nothing Nothing Nothing Nothing Nothing Nothing Nothing []
@@ -31,8 +40,24 @@ buildHead = OPMLHead "Feedreader RSS Export" [attrs] Nothing Nothing Nothing Not
     attrs = xmlAttr "title" "Feedreader"
 
 
+buildBody' :: [Feed] -> [Outline]
+buildBody' feeds =
+    let
+        datas =  concatMap  (\feed -> [(category feed, feed)]) feeds
+        mmap  = MultiMap.assocs $ MultiMap.fromList datas
+    in
+        fmap (\(key, values) -> buildElement' key values) mmap
+
 buildBody :: [Feed] -> [Outline]
 buildBody feeds = map buildElement feeds
+
+
+buildElement' :: Category -> [Feed] -> Outline
+buildElement' cat feeds =
+    let
+        children = buildBody feeds
+    in
+        Outline cat Nothing Nothing Nothing Nothing [] children []
 
 
 buildElement :: Feed -> Outline

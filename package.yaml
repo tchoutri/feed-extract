@@ -9,6 +9,8 @@ executables:
     dependencies:
     - base
     - feed-extract
+    - directory
+    - here
     ghc-options:
     - -rtsopts
     - -threaded
@@ -26,11 +28,8 @@ library:
   dependencies:
   - base
   - opml
-  - persistent-sqlite
   - sqlite-simple
-  - optparse-applicative
-  - xml
-  - text
+  - multimap
   source-dirs: lib
 license: MIT
 maintainer: Théophile Choutri

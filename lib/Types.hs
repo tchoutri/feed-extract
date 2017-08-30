@@ -4,10 +4,12 @@ module Types where
 
 import           Database.SQLite.Simple
 
+type Category = String
+
 data Feed = Feed { name     :: String
                  , htmlURL  :: String
                  , xmlURL   :: String
-                 , category :: String
+                 , category :: Category
                  }
             deriving (Show)
 
