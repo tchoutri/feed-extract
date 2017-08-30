@@ -1,8 +1,9 @@
-{-# LANGUAGE OverloadedStrings #-}
+{-# LANGUAGE OverloadedStrings   #-}
+{-# LANGUAGE ScopedTypeVariables #-}
 
 module Builder where
 
-import           Control.Exception      (onException)
+import           Control.Exception      (SomeException, try)
 import qualified Data.MultiMap          as MultiMap
 import           Database.SQLite.Simple
 import           System.Environment     (getEnv)
@@ -10,7 +11,6 @@ import           Text.OPML.Export
 import           Text.OPML.Syntax
 import           Text.OPML.Writer
 import           Types
-
 
 
 getFeeds :: FilePath -> IO [Feed]
@@ -22,7 +22,15 @@ export :: [Feed] -> IO ()
 export feeds = do
     home <- getEnv "HOME"
     let opml_str = serializeOPML $ buildOPML feeds
-    onException (writeFile (home ++ "/feedreader-export.opml") opml_str) (putStrLn "[!] Hmm, something not good at all happened when the file was being written. Make sure your hard drive isn't full and your HOME directory has the correct permissions…")
+    let savePath = home ++ "/feedreader-export.opml"
+
+    result <- try (writeFile savePath opml_str)
+    case result of
+        Right _  -> putStrLn "[+] Feeds sucessfully exported to ~/feedreader-export.opml"
+        Left (ex :: SomeException) -> do
+            putStrLn "[!] Hmm, something not good at all happened when the file was being written."
+            putStrLn "[!] Make sure your hard drive isn't full and your HOME directory has the correct permissions…"
+
 
 buildOPML :: [Feed] -> OPML
 buildOPML feeds =
