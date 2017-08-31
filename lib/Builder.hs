@@ -31,7 +31,7 @@ export feeds = do
     result <- try (writeFile savePath opml_str)
     case result of
         Right _  -> putStrLn $ "[+] Feeds sucessfully exported to " ++ savePath
-        Left (ex :: SomeException) -> do
+        Left (_ :: SomeException) ->
             putStrLn "[!] Hmm, something not good at all happened when the file was being written."
 
 buildOPML :: [Feed] -> OPML
