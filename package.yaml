@@ -29,6 +29,7 @@ library:
   - base
   - opml
   - sqlite-simple
+  - bytestring
   - multimap
   source-dirs: lib
 license: MIT

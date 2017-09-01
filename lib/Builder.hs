@@ -4,8 +4,11 @@
 module Builder where
 
 import           Control.Exception      (SomeException, try)
+import           Data.ByteString        (writeFile)
+import           Data.ByteString.Char8  (pack)
 import qualified Data.MultiMap          as MultiMap
 import           Database.SQLite.Simple
+import           Prelude                hiding (writeFile)
 import           System.Environment     (getEnv)
 -- import           System.Exit            (die)
 import           Text.OPML.Export
@@ -22,7 +25,7 @@ getFeeds path = do
 export :: [Feed] -> IO ()
 export feeds = do
     home <- getEnv "HOME"
-    let opml_str = serializeOPML $ buildOPML feeds
+    let opml_str = pack $ serializeOPML $ buildOPML feeds
     let savePath = home ++ "/feedreader-export.opml"
 
     -- print opml_str
